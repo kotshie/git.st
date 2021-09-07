@@ -80,6 +80,7 @@ GitCommandHandler >> init [
 		ifTrue: [ cwd ].
 	gitPath := rootPath / '.git'.
 	
+	rootPath asFileReference exists ifFalse: [ rootPath asFileReference createDirectory ].
 	" TODO: Check if directory exists, add overwrite behaviour "
 	gitPath asFileReference createDirectory.
 	
@@ -89,7 +90,7 @@ GitCommandHandler >> init [
 
 	self outStream 
 		nextPutAll: 'Initialized and empty Git Repository in ';
-		nextPutAll: gitPath asString.
+		nextPutAll: gitPath fullName.
 		
 	self context exitSuccess.
 	
