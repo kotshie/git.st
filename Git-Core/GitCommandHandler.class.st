@@ -62,6 +62,7 @@ GitCommandHandler >> execute [
 
 { #category : #'git-commands' }
 GitCommandHandler >> init [
+	"TODO: move into a separate object"
 	| args path cwd rootPath gitPath |
 	" gets arguments "
 	args := self context arguments.
@@ -84,9 +85,25 @@ GitCommandHandler >> init [
 	" TODO: Check if directory exists, add overwrite behaviour "
 	gitPath asFileReference createDirectory.
 	
+	" TODO: On windows .git create directory does not become hidden by default, fix this."
+	
 	"Create Objects and Refs directories"
 	(gitPath / 'objects') asFileReference createDirectory.
 	(gitPath / 'refs') asFileReference createDirectory.
+	(gitPath / 'hooks') asFileReference createDirectory.
+	(gitPath / 'info') asFileReference createDirectory.
+	
+	(gitPath / 'objects' / 'info') asFileReference createDirectory.
+	(gitPath / 'objects' / 'pack') asFileReference createDirectory.
+	(gitPath / 'refs' / 'heads') asFileReference createDirectory.
+	(gitPath / 'refs' / 'tags') asFileReference createDirectory.
+	
+	(gitPath / 'config') asFileReference createFile.
+	(gitPath / 'description') asFileReference createFile.
+	(gitPath / 'HEAD') asFileReference createFile.
+	(gitPath / 'HEAD') asFileReference writeStreamDo: [ :stream | 
+		stream nextPutAll: 'ref: refs/heads/master'.
+	].
 
 	self outStream 
 		nextPutAll: 'Initialized and empty Git Repository in ';
